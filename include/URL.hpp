@@ -1,14 +1,14 @@
+#pragma once
+
 #include <cassert>
 #include <string>
 #include <stdexcept>
 #include <sstream>
 #include <unordered_map>
 #include <algorithm>
-#include <openssl/ssl.h>
-#include <openssl/err.h>
+#include <memory>
 #include "TcpConnection.hpp"
 #include "TlsConnection.hpp"
-#include <memory>
 
 class URL {
     public:
