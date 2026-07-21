@@ -1,6 +1,8 @@
 #include "URL.hpp"
 #include "Canvas.hpp"
 #include <QMainWindow>
+#include <Text.hpp>
+#include <Tag.hpp>
 
 struct Browser {
     QMainWindow window;

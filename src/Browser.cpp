@@ -9,17 +9,29 @@ Browser::Browser() {
     window.show();
 }
 
-std::string lex(std::string body) {
+std::vector<std::unique_ptr<Token>> lex(std::string body) {
+    QString qbody = QString::fromUtf8(body.c_str());
+    std::vector<std::unique_ptr<Token>> out;
+    QString buffer;
     bool in_tag = false;
-    std::string text;
-    for (char c : body) {
-        if (c == '<') in_tag = true;
-        else if (c == '>') in_tag = false;
-        else if (!in_tag) text += c;
+    for (QChar c : qbody) {
+        if (c == '<') {
+            in_tag = true;
+            if (!buffer.isEmpty()) out.push_back(std::unique_ptr<Token>(new Text(buffer)));
+            buffer = "";
+        }
+        else if (c == '>') {
+            in_tag = false;
+            out.push_back(std::unique_ptr<Token>(new Tag(buffer)));
+            buffer = "";
+        }
+        else buffer += c;
     }
-    return text;
+    return out;
 }
 
 void Browser::load(URL url) {
-    canvas->layout(lex(url.request()));
+    std::string body = url.request();
+    auto tokens = lex(body);
+    canvas->layout(tokens);
 }
