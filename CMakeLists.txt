@@ -15,6 +15,7 @@ add_executable(webbrowser
     src/TlsConnection.cpp
     src/Browser.cpp
     src/Canvas.cpp
+    src/HTMLParser.cpp
 )
 
 target_include_directories(webbrowser PRIVATE include)

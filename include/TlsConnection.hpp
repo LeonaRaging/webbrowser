@@ -1,7 +1,7 @@
-#include "Connection.hpp"
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <unistd.h>
+#include "Connection.hpp"
 
 class TlsConnection : public Connection {
     private:

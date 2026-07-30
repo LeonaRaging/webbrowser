@@ -1,7 +1,7 @@
-#include "Connection.hpp"
 #include <sys/socket.h>
 #include <netdb.h>
 #include <unistd.h>
+#include "Connection.hpp"
 
 class TcpConnection : public Connection {
     private:

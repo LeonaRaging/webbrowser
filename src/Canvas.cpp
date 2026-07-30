@@ -38,55 +38,63 @@ void Canvas::flush() {
     line.clear();
 }
 
-void Canvas::layout(const std::vector<std::unique_ptr<Token>> &tokens) {
-    cursor_x = HSTEP, cursor_y = VSTEP;
-    int fontSize = 12;
-    QFont::Weight weight = QFont::Normal;
-    bool style = false;
+void Canvas::open_tag(const QString& tag) {
+    if (tag == "i")
+        style = true;
+    else if (tag == "b")
+        weight = QFont::Bold;
+    else if (tag == "small")
+        fontSize -= 2;
+    else if (tag == "big")
+        fontSize += 4;
+    else if (tag == "br")
+        flush();
+}
 
-    for (const auto &token: tokens) {
-        QRegularExpression re("\\s+");
-        if (auto text = dynamic_cast<Text*>(token.get())) {
-            for (const QString &word : text->value.split(re, Qt::SkipEmptyParts)) {
-                CachedFont& cached_font = get_font(fontSize, weight, style);
-                int w = cached_font.metrics.horizontalAdvance(word);
-                if (cursor_x + w > WIDTH - HSTEP) {
-                    flush();
-                }
-                line.emplace_back(cursor_x, word, &cached_font);
-                cursor_x += w + cached_font.metrics.horizontalAdvance(" ");
-            }
-        } else if (auto tag = dynamic_cast<Tag*>(token.get())) {
-            if (tag->value == "i")
-                style = true;
-            else if (tag->value == "/i")
-                style = false;
-            else if (tag->value == "b")
-                weight = QFont::Bold;
-            else if (tag->value == "/b")
-                weight = QFont::Normal;
-            else if (tag->value == "small")
-                fontSize -= 2;
-            else if (tag->value == "/small")
-                fontSize += 2;
-            else if (tag->value == "big")
-                fontSize += 4;
-            else if (tag->value == "/big")
-                fontSize -= 4;
-            else if (tag->value == "br")
-                flush();
-            else if (tag->value == "/p") {
-                flush();
-                cursor_y += VSTEP;
-            }
-        }
+void Canvas::close_tag(const QString& tag) {
+    if (tag == "i")
+        style = false;
+    else if (tag == "b")
+        weight = QFont::Normal;
+    else if (tag == "small")
+        fontSize += 2;
+    else if (tag == "big")
+        fontSize -= 4;
+    else if (tag == "p") {
+        flush();
+        cursor_y += VSTEP;
     }
-    flush();
-    update();
+}
+
+void Canvas::add_word(const QString &word) {
+    CachedFont& cached_font = get_font(fontSize, weight, style);
+    int w = cached_font.metrics.horizontalAdvance(word);
+    if (cursor_x + w > WIDTH - HSTEP) {
+        flush();
+    }
+    line.emplace_back(cursor_x, word, &cached_font);
+    cursor_x += w + cached_font.metrics.horizontalAdvance(" ");
+}
+
+void Canvas::recurse(Token* tree) {
+    QRegularExpression re("\\s+");
+    if (auto text = dynamic_cast<Text*>(tree)) {
+        for (const QString &word : text->value.split(re, Qt::SkipEmptyParts))
+            add_word(word);
+    } else if (auto element = dynamic_cast<Element*>(tree)) {
+        open_tag(element->value);
+        for (const auto& token : tree->children)
+            recurse(token.get());
+        close_tag(element->value);
+    }
 }
 
 Canvas::Canvas(QWidget * parent): QWidget(parent) {
     setFocusPolicy(Qt::StrongFocus);
+    cursor_x = HSTEP, cursor_y = VSTEP;
+    fontSize = 12;
+    weight = QFont::Normal;
+    style = false;
 }
 
 const int SCROLL_STEP = 100;
