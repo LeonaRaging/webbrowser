@@ -12,6 +12,8 @@ Browser::Browser() {
 void Browser::load(URL url) {
     std::string body = url.request();
     HTMLParser parser(QString::fromUtf8(body));
-    auto nodes = parser.parse();
-    canvas->recurse(nodes.get());
+    auto nodes = std::move(parser.parse());
+    document = std::unique_ptr<DocumentLayout>(new DocumentLayout(nodes.get()));
+    document->layout();
+    paint_tree(document.get(), canvas->display_list);
 }

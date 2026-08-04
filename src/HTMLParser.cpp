@@ -10,10 +10,6 @@ std::vector<QString> HEAD_TAGS = {
     "link", "meta", "title", "style", "script",
 };
 
-bool contains(const std::vector<QString>& vec, const QString& value) {
-    return std::find(vec.begin(), vec.end(), value) != vec.end();
-}
-
 std::pair<QString, QMap<QString, QString>> get_attributes(const QString &text) {
     QStringList parts = text.split(' ', Qt::SkipEmptyParts);
     QString tag = parts[0].toLower();

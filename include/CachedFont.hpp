@@ -1,4 +1,7 @@
+#pragma once
+
 #include <QFont>
+#include <QFontMetrics>
 
 struct CachedFont {
     QFont font;

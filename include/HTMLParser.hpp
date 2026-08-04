@@ -1,5 +1,5 @@
 #include <memory>
-#include <QString>
+#include "Util.hpp"
 #include "Text.hpp"
 #include "Element.hpp"
 

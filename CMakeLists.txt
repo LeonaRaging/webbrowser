@@ -16,6 +16,12 @@ add_executable(webbrowser
     src/Browser.cpp
     src/Canvas.cpp
     src/HTMLParser.cpp
+    src/Layout.cpp
+    src/BlockLayout.cpp
+    src/DocumentLayout.cpp
+    src/DrawText.cpp
+    src/DrawRect.cpp
+    src/Util.cpp
 )
 
 target_include_directories(webbrowser PRIVATE include)
