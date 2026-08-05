@@ -1,0 +1,7 @@
+{
+    "cmake.debugConfig": {
+        "args": [
+            "https://browser.engineering/styles.html"
+        ]
+    }
+}

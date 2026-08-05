@@ -10,18 +10,24 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
 add_executable(webbrowser
     src/main.cpp
-    src/URL.cpp
-    src/TcpConnection.cpp
-    src/TlsConnection.cpp
-    src/Browser.cpp
-    src/Canvas.cpp
-    src/HTMLParser.cpp
-    src/Layout.cpp
-    src/BlockLayout.cpp
-    src/DocumentLayout.cpp
-    src/DrawText.cpp
-    src/DrawRect.cpp
-    src/Util.cpp
+    
+    src/browser/Browser.cpp 
+    src/browser/Canvas.cpp
+    
+    src/network/URL.cpp
+    src/network/TcpConnection.cpp
+    src/network/TlsConnection.cpp
+
+    src/html/HTMLParser.cpp
+
+    src/layout/Layout.cpp
+    src/layout/BlockLayout.cpp
+    src/layout/DocumentLayout.cpp
+
+    src/painting/DrawText.cpp
+    src/painting/DrawRect.cpp
+
+    src/util/Util.cpp
 )
 
 target_include_directories(webbrowser PRIVATE include)

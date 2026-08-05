@@ -1,6 +1,6 @@
 #include <QApplication>
-#include "URL.hpp"
-#include "Browser.hpp"
+#include "network/URL.hpp"
+#include "browser/Browser.hpp"
 
 int main(int argc, char* argv[])
 {
