@@ -11,7 +11,7 @@ std::vector<QString> HEAD_TAGS = {
 };
 
 std::pair<QString, QHash<QString, QString>> get_attributes(const QString &text) {
-    QStringList parts = text.split(' ', Qt::SkipEmptyParts);
+    QStringList parts = text.split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
     QString tag = parts[0].toLower();
     QHash<QString, QString> attributes;
     for (int i = 1; i < parts.size(); i++) {
@@ -67,6 +67,7 @@ void HTMLParser::add_text(const QString& text) {
 
 void HTMLParser::add_tag(QString tag) {
     QHash<QString, QString> attributes;
+    qDebug() << tag;
     std::tie(tag, attributes) = get_attributes(tag);
     if (tag.startsWith("!")) return;
     implicit_tags(tag);

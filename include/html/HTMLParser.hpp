@@ -1,4 +1,5 @@
 #include <memory>
+#include <QRegularExpression>
 #include "util/Util.hpp"
 #include "html/Text.hpp"
 #include "html/Element.hpp"
