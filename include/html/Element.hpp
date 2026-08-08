@@ -8,6 +8,6 @@ class Element : public Token {
         QString toString() const override {
             return "<" + value + ">";
         }
-        QMap<QString, QString> attributes;
-        explicit Element(const QString &v, QMap<QString, QString> attributes, Token* parent): Token(v, parent), attributes(attributes) {};
+        QHash<QString, QString> attributes;
+        explicit Element(const QString &v, QHash<QString, QString> attributes, Token* parent): Token(v, parent), attributes(attributes) {};
 };

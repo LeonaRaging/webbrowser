@@ -27,6 +27,11 @@ add_executable(webbrowser
     src/painting/DrawText.cpp
     src/painting/DrawRect.cpp
 
+    src/css/CSSParser.cpp
+    src/css/Style.cpp
+    src/css/TagSelector.cpp
+    src/css/DescendantSelector.cpp
+
     src/util/Util.cpp
 )
 
@@ -37,4 +42,10 @@ target_link_libraries(webbrowser
         Qt6::Widgets
         OpenSSL::SSL 
         OpenSSL::Crypto
+)
+
+configure_file(
+    ${CMAKE_SOURCE_DIR}/resources/browser.css
+    ${CMAKE_BINARY_DIR}/resources/browser.css
+    COPYONLY
 )

@@ -144,6 +144,36 @@ std::string URL::request() {
     return content;
 }
 
+URL URL::resolve(QString url) {
+    std::string resolved = url.toStdString();
+
+    if (url.contains("://")) return URL(resolved);
+    
+    if (!(url.startsWith('/'))) {
+        int pos = path.rfind('/');
+        std::string dir = path.substr(0, pos);
+        while (url.startsWith("../")) {
+            url.remove(0, 3);
+            int dirPos = dir.rfind('/');
+            if (dirPos != std::string::npos) {
+                dir = dir.substr(0, dirPos);
+            }
+        }
+        resolved = dir + "/" + url.toStdString();
+    }
+
+    if (resolved.rfind("//", 0) == 0) {
+        return URL(scheme + ":" + resolved);
+    }
+
+    return URL(
+        scheme + "://" + 
+        host + ":" + 
+        port + 
+        resolved
+    );
+}
+
 URL::URL(const std::string& input) {
     std::string url = input;
 

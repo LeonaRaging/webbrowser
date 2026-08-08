@@ -10,10 +10,10 @@ std::vector<QString> HEAD_TAGS = {
     "link", "meta", "title", "style", "script",
 };
 
-std::pair<QString, QMap<QString, QString>> get_attributes(const QString &text) {
+std::pair<QString, QHash<QString, QString>> get_attributes(const QString &text) {
     QStringList parts = text.split(' ', Qt::SkipEmptyParts);
     QString tag = parts[0].toLower();
-    QMap<QString, QString> attributes;
+    QHash<QString, QString> attributes;
     for (int i = 1; i < parts.size(); i++) {
         QString attrpair = parts[i];
         int pos = attrpair.indexOf('=');
@@ -66,7 +66,7 @@ void HTMLParser::add_text(const QString& text) {
 }
 
 void HTMLParser::add_tag(QString tag) {
-    QMap<QString, QString> attributes;
+    QHash<QString, QString> attributes;
     std::tie(tag, attributes) = get_attributes(tag);
     if (tag.startsWith("!")) return;
     implicit_tags(tag);
@@ -78,12 +78,12 @@ void HTMLParser::add_tag(QString tag) {
         parent->children.push_back(std::move(node));
     } else if (contains(SELF_CLOSING_TAGS, tag)) {
         Token* parent = unfinished.back().get();
-        auto node = std::unique_ptr<Token>(new Element(tag, parent));
+        auto node = std::unique_ptr<Token>(new Element(tag, attributes, parent));
         parent->children.push_back(std::move(node));
     } 
     else {
         Token* parent = (unfinished.empty() ? nullptr : unfinished.back().get());
-        auto node = std::unique_ptr<Token>(new Element(tag, parent));
+        auto node = std::unique_ptr<Token>(new Element(tag, attributes, parent));
         unfinished.push_back(std::move(node));
     }
 }

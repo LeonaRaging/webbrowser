@@ -30,7 +30,7 @@ void Canvas::wheelEvent(QWheelEvent *event) {
 
 void Canvas::paintEvent(QPaintEvent *) {
     QPainter painter(this);
-
+    painter.fillRect(this->rect(), QColor("white"));
     for (const auto& cmd: display_list) {
         if (cmd->top > scroll_pos + HEIGHT) continue;
         if (cmd->bottom < scroll_pos) continue;

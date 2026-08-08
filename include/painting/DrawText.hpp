@@ -9,5 +9,5 @@ struct DrawText : public DrawCmd {
 
     void execute(QPainter& painter) override;
 
-    DrawText(int, int, QString, CachedFont*);
+    DrawText(int, int, QString, CachedFont*, QColor);
 };

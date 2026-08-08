@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <algorithm>
 #include <memory>
+#include <QString>
 #include "network/TcpConnection.hpp"
 #include "network/TlsConnection.hpp"
 
@@ -19,6 +20,7 @@ class URL {
         std::unique_ptr<Connection> conn;
 
         std::string request();
+        URL resolve(QString);
 
         URL(const std::string& input);
 };

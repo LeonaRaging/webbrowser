@@ -6,6 +6,7 @@
 struct DrawCmd {
     int top;
     int bottom;
+    QColor color;
     virtual ~DrawCmd() {}
     virtual void execute(QPainter &painter) = 0;
 };

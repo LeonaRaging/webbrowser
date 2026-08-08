@@ -11,6 +11,15 @@ const int SCROLL_STEP = 100;
 
 extern int scroll_pos;
 
-inline bool contains(const std::vector<QString>& vec, const QString& value) {
+template <typename T>
+inline bool contains(const std::vector<T>& vec, const T& value) {
     return std::find(vec.begin(), vec.end(), value) != vec.end();
+}
+
+template <typename T>
+inline void tree_to_list(T* tree, std::vector<T*>& list) {
+    list.push_back(tree);
+    for (auto& child : tree->children) {
+        tree_to_list(child.get(), list);
+    }
 }

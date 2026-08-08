@@ -2,6 +2,7 @@
     "cmake.debugConfig": {
         "args": [
             "https://browser.engineering/styles.html"
+            // "https://example.org"
         ]
     }
 }
