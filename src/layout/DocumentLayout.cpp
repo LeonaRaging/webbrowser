@@ -12,7 +12,6 @@ void DocumentLayout::layout() {
     std::unique_ptr<Layout> child(new BlockLayout(node, this, nullptr));
     child->layout();
     height = child->height;
-    display_list = child->paint();
     children.push_back(std::move(child));
 }
 

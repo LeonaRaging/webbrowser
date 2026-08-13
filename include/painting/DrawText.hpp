@@ -1,3 +1,5 @@
+#pragma once
+
 #include <QString>
 #include "util/CachedFont.hpp"
 #include "painting/DrawCmd.hpp"

@@ -23,6 +23,8 @@ add_executable(webbrowser
     src/layout/Layout.cpp
     src/layout/BlockLayout.cpp
     src/layout/DocumentLayout.cpp
+    src/layout/LineLayout.cpp
+    src/layout/TextLayout.cpp
 
     src/painting/DrawText.cpp
     src/painting/DrawRect.cpp
@@ -33,6 +35,7 @@ add_executable(webbrowser
     src/css/DescendantSelector.cpp
 
     src/util/Util.cpp
+    src/util/CachedFont.cpp
 )
 
 target_include_directories(webbrowser PRIVATE include)

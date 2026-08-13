@@ -48,8 +48,6 @@ QChar CSSParser::ignore_until(std::vector<QChar> chars) {
     return QChar();
 }
 
-#include <QDebug>
-
 QHash<QString, QString> CSSParser::body() {
     QHash<QString, QString> pairs;
     while (i < s.size()) {

@@ -9,26 +9,11 @@ std::vector<QString> BLOCK_ELEMENTS = {
     "legend", "details", "summary"
 };
 
-void BlockLayout::flush() {
-    if (line.empty()) return;
-    int max_ascent = 0, max_descent = 0;
-    for (const auto &it : line) {
-        int x; QString word; CachedFont* cached_font; QColor color;
-        std::tie(x, word, cached_font, color) = it;
-        max_ascent = std::max(max_ascent, cached_font->metrics.ascent());
-        max_descent = std::max(max_descent, cached_font->metrics.descent());
-    }
-    int baseline = cursor_y + 1.25 * max_ascent;
-    for (auto it : line) {
-        int rel_x; QString word; CachedFont* cached_font; QColor color;
-        std::tie(rel_x, word, cached_font, color) = it;
-        int new_x = x + rel_x;
-        int new_y = y + baseline;
-        display_list.emplace_back(new DrawText(new_x, new_y, word, cached_font, color));
-    }
-    cursor_y = baseline + 1.25 * max_descent;
+void BlockLayout::new_line() {
     cursor_x = 0;
-    line.clear();
+    LineLayout* last_line = (children.empty() ? nullptr : dynamic_cast<LineLayout*>(children.back().get()));
+    std::unique_ptr<LineLayout> line = std::unique_ptr<LineLayout>(new LineLayout(node, this, last_line));
+    children.push_back(std::move(line));
 }
 
 void BlockLayout::add_word(Token* node, const QString &word) {
@@ -38,13 +23,18 @@ void BlockLayout::add_word(Token* node, const QString &word) {
     int fontSize = int(font_size.left(font_size.size() - 2).toDouble() * 0.75);
     QColor color(node->style.value("color"));
 
-    CachedFont& cached_font = get_font(fontSize, weight, style);
-    int w = cached_font.metrics.horizontalAdvance(word);
+    CachedFont* cached_font = get_font(fontSize, weight, style);
+    int w = cached_font->metrics.horizontalAdvance(word);
     if (cursor_x + w > width) {
-        flush();
+        new_line();
     }
-    line.emplace_back(cursor_x, word, &cached_font, color);
-    cursor_x += w + cached_font.metrics.horizontalAdvance(" ");
+
+    LineLayout* line = dynamic_cast<LineLayout*>(children.back().get());
+    TextLayout* previous_word = (line->children.empty() ? nullptr : dynamic_cast<TextLayout*>(line->children.back().get()));
+    std::unique_ptr<TextLayout> text = std::unique_ptr<TextLayout>(new TextLayout(node, word, line, previous_word));
+    line->children.push_back(std::move(text));
+
+    cursor_x += w + cached_font->metrics.horizontalAdvance(" ");
 }
 
 void BlockLayout::recurse(Token* tree) {
@@ -54,7 +44,7 @@ void BlockLayout::recurse(Token* tree) {
             add_word(tree, word);
     } else if (auto element = dynamic_cast<Element*>(tree)) {
         if (element->value == "br")
-            flush();
+            new_line();
         for (const auto& token : tree->children)
             recurse(token.get());
     }
@@ -79,11 +69,14 @@ void BlockLayout::layout() {
             children.push_back(std::move(next));
         }
     } else {
-        cursor_x = 0;
-        cursor_y = 0;
+        new_line();
         recurse(node);
-        flush();
-        height = cursor_y;
+
+        height = 0;
+        for (const auto& child : children) {
+            child->layout();
+            height += child->height;
+        }
     }
 }
 
@@ -100,20 +93,6 @@ QString BlockLayout::layout_mode() {
     return (node->children.empty() ? "block" : "inline");
 }
 
-CachedFont& BlockLayout::get_font(int size, QFont::Weight weight, bool style) {
-    std::tuple<int, QFont::Weight, bool> key = {size, weight, style};
-    auto it = FONTS.find(key);
-
-    if (it == FONTS.end()) {
-        QFont font("Times", size);
-        font.setWeight(weight);
-        font.setItalic(style);
-        it = FONTS.emplace(key, CachedFont(font)).first;
-    }
-
-    return it->second;
-}
-
 std::vector<std::unique_ptr<DrawCmd>> BlockLayout::paint() {
     std::vector<std::unique_ptr<DrawCmd>> cmds;
     QColor bgcolor(node->style.value("background-color", "transparent"));
@@ -121,11 +100,6 @@ std::vector<std::unique_ptr<DrawCmd>> BlockLayout::paint() {
         int x2 = x + width;
         int y2 = y + height;
         cmds.emplace_back(new DrawRect(x, y, x2, y2, bgcolor));
-    }
-    if (layout_mode() == "inline") {
-        cmds.insert(cmds.end(),
-                    std::make_move_iterator(display_list.begin()),
-                    std::make_move_iterator(display_list.end()));
     }
     return cmds;
 }

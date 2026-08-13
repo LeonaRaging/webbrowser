@@ -67,7 +67,6 @@ void HTMLParser::add_text(const QString& text) {
 
 void HTMLParser::add_tag(QString tag) {
     QHash<QString, QString> attributes;
-    qDebug() << tag;
     std::tie(tag, attributes) = get_attributes(tag);
     if (tag.startsWith("!")) return;
     implicit_tags(tag);

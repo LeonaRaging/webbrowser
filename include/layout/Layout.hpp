@@ -13,7 +13,6 @@ struct Layout {
     Layout* parent;
     Layout* previous;
     std::vector<std::unique_ptr<Layout>> children;
-    std::vector<std::unique_ptr<DrawCmd>> display_list;
 
     virtual std::vector<std::unique_ptr<DrawCmd>> paint() = 0;
     virtual void layout();
