@@ -51,16 +51,15 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
         std::vector<Layout*> objs;
         for (Layout* layout : list)
             if (layout->x <= x && x < layout->x + layout->width &&
-                layout->y <= y && y < layout->y + layout->height) 
+                layout->y - layout->height < y && y <= layout->y) 
                     objs.push_back(layout);
         if (objs.empty()) return;
-        
-        Token* elt = objs.back()->node;
+
+        Token* elt = objs[0]->node;
 
         while (elt) {
-            if (dynamic_cast<Text*>(elt)) return;
             Element* element = dynamic_cast<Element*>(elt);
-            if (element->value == "a" && element->attributes.contains("href")) {
+            if (element && element->value == "a" && element->attributes.contains("href")) {
                 std::string url = element->attributes.value("href").toStdString();
                 browser->url = url;
                 browser->load(URL(url));
