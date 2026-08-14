@@ -1,7 +1,7 @@
 {
     "cmake.debugConfig": {
         "args": [
-            "https://browser.engineering/styles.html"
+            "https://browser.engineering/chrome.html"
             // "https://example.org"
         ]
     }

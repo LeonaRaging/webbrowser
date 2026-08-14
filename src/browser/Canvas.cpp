@@ -1,6 +1,7 @@
 #include "browser/Canvas.hpp"
+#include "browser/Browser.hpp"
 
-Canvas::Canvas(QWidget * parent): QWidget(parent) {
+Canvas::Canvas(Browser* browser, QWidget * parent): browser(browser), QWidget(parent) {
     setFocusPolicy(Qt::StrongFocus);
 }
 
@@ -35,5 +36,38 @@ void Canvas::paintEvent(QPaintEvent *) {
         if (cmd->top > scroll_pos + HEIGHT) continue;
         if (cmd->bottom < scroll_pos) continue;
         cmd->execute(painter);
+    }
+}
+
+void Canvas::mousePressEvent(QMouseEvent* event) {
+    if (event->button() == Qt::LeftButton) {
+        int x = event->position().x();
+        int y = event->position().y();
+        y += scroll_pos;
+
+        std::vector<Layout*> list;
+        tree_to_list(dynamic_cast<Layout*>(browser->document.get()), list);
+
+        std::vector<Layout*> objs;
+        for (Layout* layout : list)
+            if (layout->x <= x && x < layout->x + layout->width &&
+                layout->y <= y && y < layout->y + layout->height) 
+                    objs.push_back(layout);
+        if (objs.empty()) return;
+        
+        Token* elt = objs.back()->node;
+
+        while (elt) {
+            if (dynamic_cast<Text*>(elt)) return;
+            Element* element = dynamic_cast<Element*>(elt);
+            if (element->value == "a" && element->attributes.contains("href")) {
+                std::string url = element->attributes.value("href").toStdString();
+                browser->url = url;
+                browser->load(URL(url));
+                update();
+                return;
+            }
+            elt = elt->parent;
+        }
     }
 }

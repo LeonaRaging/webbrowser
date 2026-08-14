@@ -1,9 +1,10 @@
 #include "browser/Browser.hpp"
+#include "browser/Canvas.hpp"
 
 std::vector<std::pair<std::unique_ptr<Selector>, QHash<QString, QString>>> rules;
 
 Browser::Browser() {
-    canvas = new Canvas();
+    canvas = new Canvas(this);
     canvas->setFixedSize(WIDTH, HEIGHT);
 
     window.setCentralWidget(canvas);
@@ -63,7 +64,7 @@ void Browser::load(URL url) {
     std::string body = url.request();
     HTMLParser parser(QString::fromUtf8(body));
 
-    auto node = std::move(parser.parse());
+    node = std::move(parser.parse());
 
     rules = CSSParser(load_css()).parse();
     get_rules(node, url);
@@ -72,5 +73,6 @@ void Browser::load(URL url) {
     
     document = std::unique_ptr<DocumentLayout>(new DocumentLayout(node.get()));
     document->layout();
+    canvas->display_list.clear();
     paint_tree(document.get(), canvas->display_list);
 }
