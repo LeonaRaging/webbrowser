@@ -1,7 +1,7 @@
 #include "browser/Canvas.hpp"
-#include "browser/Browser.hpp"
+#include "browser/Tab.hpp"
 
-Canvas::Canvas(Browser* browser, QWidget * parent): browser(browser), QWidget(parent) {
+Canvas::Canvas(QWidget * parent): QWidget(parent) {
     setFocusPolicy(Qt::StrongFocus);
 }
 
@@ -45,8 +45,10 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
         int y = event->position().y();
         y += scroll_pos;
 
+        Tab* tab = dynamic_cast<Tab*>(parentWidget());
+
         std::vector<Layout*> list;
-        tree_to_list(dynamic_cast<Layout*>(browser->document.get()), list);
+        tree_to_list(dynamic_cast<Layout*>(tab->document.get()), list);
 
         std::vector<Layout*> objs;
         for (Layout* layout : list)
@@ -61,8 +63,7 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
             Element* element = dynamic_cast<Element*>(elt);
             if (element && element->value == "a" && element->attributes.contains("href")) {
                 std::string url = element->attributes.value("href").toStdString();
-                browser->url = url;
-                browser->load(URL(url));
+                tab->load(url);
                 update();
                 return;
             }

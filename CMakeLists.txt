@@ -4,6 +4,7 @@ project(webbrowser)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_AUTOMOC ON)
 
 find_package(OpenSSL REQUIRED)
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
@@ -11,7 +12,9 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets)
 add_executable(webbrowser
     src/main.cpp
     
-    src/browser/Browser.cpp 
+    src/browser/Browser.cpp
+    src/browser/Chrome.cpp
+    src/browser/Tab.cpp
     src/browser/Canvas.cpp
     
     src/network/URL.cpp
@@ -36,6 +39,8 @@ add_executable(webbrowser
 
     src/util/Util.cpp
     src/util/CachedFont.cpp
+
+    include/browser/Tab.hpp
 )
 
 target_include_directories(webbrowser PRIVATE include)

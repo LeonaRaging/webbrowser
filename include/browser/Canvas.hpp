@@ -6,10 +6,9 @@
 #include "util/CachedFont.hpp"
 #include "painting/DrawCmd.hpp"
 
-struct Browser;
+struct Tab;
 
 struct Canvas : public QWidget {
-    Browser* browser;
     std::vector<std::unique_ptr<DrawCmd>> display_list;
     
     void paintEvent(QPaintEvent *) override;
@@ -18,5 +17,5 @@ struct Canvas : public QWidget {
     void mousePressEvent(QMouseEvent* event) override;
     void scrollpage(int step);
     
-    Canvas(Browser* browser, QWidget *parent = nullptr);
+    Canvas(QWidget *parent = nullptr);
 };
