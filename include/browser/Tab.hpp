@@ -13,13 +13,13 @@ struct Tab : public QWidget {
     Q_OBJECT
 
     public:
-        std::string url;
+        URL url;
         std::unique_ptr<Token> node;
         std::unique_ptr<DocumentLayout> document;
-        std::vector<std::string> history;
+        std::vector<URL> history;
         Canvas* canvas;
 
-        void load(std::string);
+        void load(URL);
         void go_back();
 
         Tab(QWidget* parent = nullptr);

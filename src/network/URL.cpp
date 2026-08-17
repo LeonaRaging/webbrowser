@@ -52,6 +52,8 @@ std::string URL::request() {
         throw std::runtime_error("socket() failed");
     }
 
+    std::unique_ptr<Connection> conn;
+
     if (scheme == "http") {
         conn = std::unique_ptr<Connection>(new TcpConnection(s));
     }
@@ -144,6 +146,10 @@ std::string URL::request() {
     return content;
 }
 
+std::string URL::to_string() {
+    return scheme + "://" + host + path;
+}
+
 URL URL::resolve(QString url) {
     std::string resolved = url.toStdString();
 
@@ -202,3 +208,5 @@ URL::URL(const std::string& input) {
         host = host.substr(0, colon);
     }
 }
+
+URL::URL() {}

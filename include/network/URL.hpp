@@ -17,10 +17,10 @@ class URL {
         std::string host;
         std::string port;
         std::string path;
-        std::unique_ptr<Connection> conn;
-
         std::string request();
+        std::string to_string();
         URL resolve(QString);
 
         URL(const std::string& input);
+        URL();
 };

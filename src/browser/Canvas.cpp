@@ -62,7 +62,7 @@ void Canvas::mousePressEvent(QMouseEvent* event) {
         while (elt) {
             Element* element = dynamic_cast<Element*>(elt);
             if (element && element->value == "a" && element->attributes.contains("href")) {
-                std::string url = element->attributes.value("href").toStdString();
+                URL url = tab->url.resolve(element->attributes.value("href"));
                 tab->load(url);
                 update();
                 return;

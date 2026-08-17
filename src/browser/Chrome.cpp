@@ -2,7 +2,7 @@
 
 void Chrome::new_tab(std::string url) {
     Tab* new_tab = new Tab(tabs);
-    new_tab->load(url);
+    new_tab->load(URL(url));
     connect(new_tab, &Tab::urlChanged, this, &Chrome::url_change);
 
     tabs->addTab(new_tab, "Tab " + QString::number(tabs->count()));
@@ -12,7 +12,7 @@ void Chrome::new_tab(std::string url) {
 void Chrome::tab_change(int index) {
     Tab* tab = dynamic_cast<Tab*>(tabs->widget(index));
 
-    url_bar->setText(QString::fromStdString(tab->url));
+    url_bar->setText(QString::fromStdString(tab->url.to_string()));
 }
 
 void Chrome::url_change(const QString& url)

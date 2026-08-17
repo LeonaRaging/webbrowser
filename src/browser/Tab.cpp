@@ -9,7 +9,7 @@ Tab::Tab(QWidget* parent): QWidget(parent) {
 }
 
 QString load_css() {
-    QFile file("build/resources/browser.css");
+    QFile file("../resources/browser.css");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qDebug() << "Failed to open browser.css:"
                 << file.errorString();
@@ -56,13 +56,12 @@ void get_rules(const std::unique_ptr<Token>& node, URL& url) {
     std::sort(rules.begin(), rules.end(), cascade_priority);
 }
 
-void Tab::load(std::string _url) {
+void Tab::load(URL _url) {
     this->url = _url;
     history.push_back(_url);
 
-    emit urlChanged(QString::fromStdString(_url));
+    emit urlChanged(QString::fromStdString(_url.to_string()));
 
-    URL url(_url);
     std::string body = url.request();
     HTMLParser parser(QString::fromUtf8(body));
 
@@ -83,7 +82,7 @@ void Tab::load(std::string _url) {
 void Tab::go_back() {
     if (history.size() > 1) {
         history.pop_back();
-        std::string url = history.back();
+        URL url = history.back();
         history.pop_back();
         load(url);
     }
