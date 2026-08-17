@@ -57,6 +57,7 @@ void get_rules(const std::unique_ptr<Token>& node, URL& url) {
 }
 
 void Tab::load(URL _url) {
+    this->canvas->scroll_pos = 0;
     this->url = _url;
     history.push_back(_url);
 

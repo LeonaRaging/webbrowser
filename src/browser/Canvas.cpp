@@ -2,6 +2,7 @@
 #include "browser/Tab.hpp"
 
 Canvas::Canvas(QWidget * parent): QWidget(parent) {
+    scroll_pos = 0;
     setFocusPolicy(Qt::StrongFocus);
 }
 
@@ -35,7 +36,7 @@ void Canvas::paintEvent(QPaintEvent *) {
     for (const auto& cmd: display_list) {
         if (cmd->top > scroll_pos + HEIGHT) continue;
         if (cmd->bottom < scroll_pos) continue;
-        cmd->execute(painter);
+        cmd->execute(painter, scroll_pos);
     }
 }
 

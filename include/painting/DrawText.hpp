@@ -9,7 +9,7 @@ struct DrawText : public DrawCmd {
     QString text;
     CachedFont* font;
 
-    void execute(QPainter& painter) override;
+    void execute(QPainter& painter, int scroll_pos) override;
 
     DrawText(int, int, QString, CachedFont*, QColor);
 };

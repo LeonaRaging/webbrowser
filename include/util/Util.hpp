@@ -9,8 +9,6 @@ const int WIDTH = 800;
 const int HEIGHT = 600;
 const int SCROLL_STEP = 100;
 
-extern int scroll_pos;
-
 template <typename T>
 inline bool contains(const std::vector<T>& vec, const T& value) {
     return std::find(vec.begin(), vec.end(), value) != vec.end();

@@ -1,6 +1,6 @@
 #include "painting/DrawText.hpp"
 
-void DrawText::execute(QPainter &painter) {
+void DrawText::execute(QPainter &painter, int scroll_pos) {
     painter.setFont(font->font);
     painter.setPen(color);
     painter.drawText(left, top - scroll_pos, text);

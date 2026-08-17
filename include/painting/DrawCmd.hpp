@@ -8,5 +8,5 @@ struct DrawCmd {
     int bottom;
     QColor color;
     virtual ~DrawCmd() {}
-    virtual void execute(QPainter &painter) = 0;
+    virtual void execute(QPainter &painter, int scroll_pos) = 0;
 };

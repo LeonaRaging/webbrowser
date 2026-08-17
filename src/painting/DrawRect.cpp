@@ -1,6 +1,6 @@
 #include "painting/DrawRect.hpp"
 
-void DrawRect::execute(QPainter& painter) {
+void DrawRect::execute(QPainter& painter, int scroll_pos) {
     painter.fillRect(left, top - scroll_pos, right - left + 1, bottom - top + 1, color);
 }
 

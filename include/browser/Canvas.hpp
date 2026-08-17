@@ -9,6 +9,7 @@
 struct Tab;
 
 struct Canvas : public QWidget {
+    int scroll_pos;
     std::vector<std::unique_ptr<DrawCmd>> display_list;
     
     void paintEvent(QPaintEvent *) override;
